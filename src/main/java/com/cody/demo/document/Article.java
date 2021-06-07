@@ -1,12 +1,9 @@
 package com.cody.demo.document;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDateTime;
 
 /**
  * @author wql
@@ -18,9 +15,9 @@ import java.time.LocalDateTime;
  */
 @Document(indexName = "article")
 @Data
+@Accessors(chain = true)
 public class Article {
 
-    @Id
     private String id;
 
     private String title;
@@ -29,8 +26,6 @@ public class Article {
 
     private Integer userId;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime createTime;
+    private String createTime;
 
 }

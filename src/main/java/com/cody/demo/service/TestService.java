@@ -1,9 +1,10 @@
 package com.cody.demo.service;
 
 import com.cody.demo.document.Article;
+import com.cody.demo.document.Bank;
 import org.springframework.data.elasticsearch.core.SearchHits;
 
-public interface ArticleService {
+public interface TestService {
 
     Article findById(String id);
 
@@ -12,4 +13,6 @@ public interface ArticleService {
     String save(Article article);
 
     SearchHits<Article> getPage(Integer page, Integer pageSize);
+
+    SearchHits<Bank> getBankPage(Integer page, Integer pageSize);
 }
