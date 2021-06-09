@@ -1,10 +1,20 @@
 package com.cody.demo.controller;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
 import com.cody.demo.document.Article;
 import com.cody.demo.service.TestService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author wql
@@ -20,10 +30,22 @@ public class TestController {
 
     @Autowired
     private TestService testService;
+    @Resource
+    private ObjectMapper jsonMapper;
+
+    @GetMapping("test")
+    public void test() throws JsonProcessingException {
+        String t = "[{\"formId\": 1402073176056582145, \"tableName\": \"cas_test\", \"tableAlias\": \"级联选择器\", \"searchFields\": [\"column_0\", \"column_1\"], \"relationFields\": [\"column_0\"]}]";
+
+        JSONArray objects = JSONUtil.parseArray(t);
+        System.out.println(JSONUtil.parseObj(objects.get(0)).get("formId"));
+
+        List<Map<String, Object>> list = jsonMapper.readValue(t, List.class);
+        System.out.println(list.get(0).get("formId"));
+    }
 
     @GetMapping("getInfo")
     public void getInfo(@RequestParam String id) {
-        System.out.println();
         log.info("------getInfo{}", testService.findById(id));
     }
 
