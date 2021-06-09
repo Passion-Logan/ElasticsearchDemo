@@ -1,5 +1,6 @@
 package com.cody.demo.controller;
 
+import cn.hutool.db.handler.HandleHelper;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.cody.demo.document.Article;
@@ -13,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author wql
@@ -37,11 +38,23 @@ public class TestController {
     public void test() throws JsonProcessingException {
         String t = "[{\"formId\": 1402073176056582145, \"tableName\": \"cas_test\", \"tableAlias\": \"级联选择器\", \"searchFields\": [\"column_0\", \"column_1\"], \"relationFields\": [\"column_0\"]}]";
 
+        String content = "{\"expression\": \"#{sum(cas_test.column_0)}+#{cas_test.column_1}\", \"expressionAlias\": \"sum(字段分组)+级联选择器\"}";
+
+
+        JsonNode jsonNode = jsonMapper.readTree(content);
+        System.out.println(jsonNode.get("expression"));
+
+
         JSONArray objects = JSONUtil.parseArray(t);
-        System.out.println(JSONUtil.parseObj(objects.get(0)).get("formId"));
+        System.out.println(JSONUtil.parseObj(objects.get(0)).get("searchFields"));
 
         List<Map<String, Object>> list = jsonMapper.readValue(t, List.class);
-        System.out.println(list.get(0).get("formId"));
+        Map<String, Object> info = list.get(0);
+        List<String> searchFields = (ArrayList<String>) info.get("searchFields");
+        searchFields.add("column_0");
+        searchFields.add("column_2");
+        info.replace("searchFields", searchFields.stream().distinct().collect(Collectors.toList()));
+        System.out.println(info);
     }
 
     @GetMapping("getInfo")
